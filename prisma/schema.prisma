@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique
+  email     String   @unique
+  name      String?
+  prompts   Prompt[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Prompt {
+  id           String       @id @default(cuid())
+  userId       String
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String
+  description  String // serves as "Goal/Scope"
+  systemPrompt String
+  userPrompt   String
+  evaluations  Evaluation[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Evaluation {
+  id             String   @id @default(cuid())
+  promptId       String
+  prompt         Prompt   @relation(fields: [promptId], references: [id], onDelete: Cascade)
+  averageScore   Float
+  bestModel      String
+  cost           Float
+  latency        Int
+  recommendation String
+  results        Result[]
+  createdAt      DateTime @default(now())
+}
+
+model Result {
+  id             String     @id @default(cuid())
+  evaluationId   String
+  evaluation     Evaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+  difficulty     String // easy, medium, hard
+  input          String
+  expectedOutput String
+  modelId        String
+  output         String
+  score          Float
+  passed         Boolean
+  correctness    Float
+  relevance      Float
+  completeness   Float
+  clarity        Float
+  createdAt      DateTime   @default(now())
+}
