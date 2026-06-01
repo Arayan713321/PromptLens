@@ -1,14 +1,6 @@
-import { prisma } from "@/lib/prisma";
-import { models } from "@/lib/mock-data";
+// Legacy registry — not used by the current simplified product.
+// Kept as a stub to satisfy TypeScript compilation.
 
 export async function ensureModels() {
-  await Promise.all(
-    models.map((model) =>
-      prisma.model.upsert({
-        where: { id: model.id },
-        update: model,
-        create: model,
-      }),
-    ),
-  );
+  // No-op: the simplified schema has no Model table.
 }

@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { PageHeader } from "@/components/app/page-header";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/utils";
 import type { EvaluationRun, Prompt } from "@/types";
@@ -37,7 +36,7 @@ export function EvaluationsView({
                     className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border bg-card-solid/50 p-5 transition hover:border-accent/40 cursor-pointer shadow-sm md:flex-nowrap"
                   >
                     <div>
-                      <p className="font-semibold text-foreground text-base">{prompt?.name || run.name}</p>
+                      <p className="font-semibold text-foreground text-base">{prompt?.name ?? "Evaluation Run"}</p>
                       <p className="text-xs text-muted mt-1 leading-relaxed max-w-lg truncate">
                         {prompt?.description || "Automatic prompt evaluation run."}
                       </p>

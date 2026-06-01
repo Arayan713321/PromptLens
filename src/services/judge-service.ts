@@ -1,5 +1,13 @@
-import OpenAI from "openai";
-import type { ScoreBreakdown } from "@/types";
+// Legacy service — not used by the current simplified product.
+// Kept as a stub to satisfy TypeScript compilation.
+
+type ScoreBreakdown = {
+  correctness: number;
+  relevance: number;
+  completeness: number;
+  clarity: number;
+  llmJudge: number;
+};
 
 function clampScore(score: number) {
   return Math.max(0, Math.min(100, Math.round(score)));
@@ -29,39 +37,7 @@ export async function scoreWithJudge(input: {
   expectedOutput: string;
   output: string;
 }): Promise<ScoreBreakdown> {
-  if (!process.env.OPENAI_API_KEY) {
-    return heuristicJudge(input.output, input.expectedOutput);
-  }
-
-  try {
-    const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-    const response = await client.chat.completions.create({
-      model: process.env.OPENAI_JUDGE_MODEL ?? "gpt-4o-mini",
-      temperature: 0,
-      response_format: { type: "json_object" },
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are an LLM evaluation judge. Return JSON with numeric 0-100 keys: correctness, relevance, completeness, clarity, llmJudge.",
-        },
-        {
-          role: "user",
-          content: JSON.stringify(input),
-        },
-      ],
-    });
-    const parsed = JSON.parse(response.choices[0]?.message.content ?? "{}");
-    return {
-      correctness: clampScore(Number(parsed.correctness)),
-      relevance: clampScore(Number(parsed.relevance)),
-      completeness: clampScore(Number(parsed.completeness)),
-      clarity: clampScore(Number(parsed.clarity)),
-      llmJudge: clampScore(Number(parsed.llmJudge)),
-    };
-  } catch {
-    return heuristicJudge(input.output, input.expectedOutput);
-  }
+  return heuristicJudge(input.output, input.expectedOutput);
 }
 
 export function aggregateScore(breakdown: ScoreBreakdown) {

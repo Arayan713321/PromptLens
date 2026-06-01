@@ -8,25 +8,16 @@ import { UserButton } from "@clerk/nextjs";
 import {
   BarChart3,
   Brain,
-  Database,
-  FileText,
-  GitCompare,
-  History,
   LayoutDashboard,
   Moon,
-  Plus,
-  Search,
   Settings,
-  Sparkles,
   Sun,
   TerminalSquare,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useWorkspaceStore } from "@/stores/use-workspace-store";
 import { CommandPalette } from "./command-palette";
-import { useState } from "react";
 
 const navItems = [
   { href: "/dashboard", label: "Home", icon: LayoutDashboard },
