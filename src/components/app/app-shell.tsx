@@ -44,35 +44,42 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen lg:grid lg:grid-cols-[17rem_1fr]">
-      <aside className="glass sticky top-0 z-30 hidden h-screen rounded-none border-y-0 border-l-0 p-4 lg:flex lg:flex-col">
-        <Link href="/dashboard" className="mb-8 flex items-center gap-3 px-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-md bg-foreground text-background">
-            <BarChart3 className="h-5 w-5" />
-          </div>
-          <div>
-            <p className="font-semibold">PromptLens</p>
-            <p className="text-xs text-muted">AI testing simplified</p>
-          </div>
-        </Link>
-        <nav className="grid gap-1 flex-1">
-          {navItems.map((item) => {
-            const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm text-muted transition hover:bg-foreground/8 hover:text-foreground",
-                  active && "bg-foreground/10 text-foreground",
-                )}
-              >
-                <Icon className="h-4 w-4" />
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
+      <aside className="sticky top-0 z-30 hidden h-screen border-r border-border bg-card/45 backdrop-blur-xl p-6 lg:flex lg:flex-col justify-between shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+        <div className="space-y-8">
+          <Link href="/dashboard" className="flex items-center gap-3.5 px-1.5 transition-all hover:opacity-90">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-tr from-accent to-accent-2 text-white shadow-md shadow-accent/15">
+              <BarChart3 className="h-5.5 w-5.5" />
+            </div>
+            <div>
+              <p className="font-bold text-foreground tracking-tight text-base">PromptLens</p>
+              <p className="text-[10px] font-semibold text-accent uppercase tracking-wider">AI testing lab</p>
+            </div>
+          </Link>
+          <nav className="space-y-1.5">
+            {navItems.map((item) => {
+              const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "group flex items-center gap-3.5 rounded-xl px-4 py-3 text-sm font-semibold tracking-wide transition-all duration-200 border border-transparent",
+                    active 
+                      ? "bg-gradient-to-r from-accent/12 to-accent-2/6 text-accent border-accent/15 shadow-sm shadow-accent/5 font-bold" 
+                      : "text-muted hover:bg-foreground/5 hover:text-foreground hover:translate-x-1"
+                  )}
+                >
+                  <Icon className={cn(
+                    "h-4.5 w-4.5 transition-transform duration-200 group-hover:scale-110",
+                    active ? "text-accent" : "text-muted group-hover:text-foreground"
+                  )} />
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
       </aside>
       <div className="min-w-0">
         <header className="sticky top-0 z-20 border-b border-border bg-background/78 backdrop-blur-xl">
