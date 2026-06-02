@@ -62,24 +62,30 @@ export async function POST(request: Request) {
       systemPrompt = "You are a professional assistant specialized in: " + description;
       userPrompt = optionalPrompt.includes("{{") ? optionalPrompt : `${optionalPrompt}\n\nInput query: {{input}}`;
     } else if (hasApiKey) {
-      const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-      const promptGen = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content: "You are a Principal AI Prompt Engineer. Create system and user prompts matching the user specifications. Return JSON.",
-          },
-          {
-            role: "user",
-            content: `Generate an optimized systemPrompt and userPrompt for prompt named "${name}" with scope "${description}". The userPrompt must contain a dynamic variable placeholder in double brackets (e.g. {{input}}). Return strictly a JSON object: { "systemPrompt": "...", "userPrompt": "..." }`,
-          },
-        ],
-        response_format: { type: "json_object" },
-      });
-      const parsed = parseLLMJson(promptGen.choices[0]?.message.content ?? "{}");
-      systemPrompt = parsed.systemPrompt || "You are a professional assistant.";
-      userPrompt = parsed.userPrompt || "Process the request: {{input}}";
+      try {
+        const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+        const promptGen = await openai.chat.completions.create({
+          model: "gpt-4o-mini",
+          messages: [
+            {
+              role: "system",
+              content: "You are a Principal AI Prompt Engineer. Create system and user prompts matching the user specifications. Return JSON.",
+            },
+            {
+              role: "user",
+              content: `Generate an optimized systemPrompt and userPrompt for prompt named "${name}" with scope "${description}". The userPrompt must contain a dynamic variable placeholder in double brackets (e.g. {{input}}). Return strictly a JSON object: { "systemPrompt": "...", "userPrompt": "..." }`,
+            },
+          ],
+          response_format: { type: "json_object" },
+        });
+        const parsed = parseLLMJson(promptGen.choices[0]?.message.content ?? "{}");
+        systemPrompt = parsed.systemPrompt || "You are a professional assistant.";
+        userPrompt = parsed.userPrompt || "Process the request: {{input}}";
+      } catch (err) {
+        console.warn("AI prompt generation failed (likely 429 quota or network), falling back:", err);
+        systemPrompt = `You are a professional AI assistant specialized in: ${description}`;
+        userPrompt = `Please process this input query and output a high-quality response: {{input}}`;
+      }
     } else {
       systemPrompt = `You are a professional AI assistant specialized in: ${description}`;
       userPrompt = `Please process this input query and output a high-quality response: {{input}}`;
@@ -119,7 +125,7 @@ export async function POST(request: Request) {
         const parsed = parseLLMJson(testCaseGen.choices[0]?.message.content ?? "{}");
         testCases = parsed.testCases || [];
       } catch (err) {
-        console.error("AI test case generation failed, using fallback:", err);
+        console.warn("AI test case generation failed (likely 429 quota or network), using fallback:", err);
       }
     }
 
