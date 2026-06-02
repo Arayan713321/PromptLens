@@ -77,22 +77,22 @@ const stats = [
 
 export default function LandingPage() {
   return (
-    <div className="mx-auto max-w-6xl space-y-20 py-12 md:py-20">
+    <div className="mx-auto max-w-6xl space-y-20 py-12 md:py-20 animate-fade-in">
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section className="text-center space-y-6">
-        <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card-solid/70 px-4 py-1.5 text-xs font-medium text-muted">
-          <Sparkles className="h-3.5 w-3.5 text-accent" />
+        <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card-solid/70 px-4 py-1.5 text-xs font-medium text-muted animate-float">
+          <Sparkles className="h-3.5 w-3.5 text-accent animate-pulse" />
           AI-powered prompt testing, made simple
         </div>
 
-        <h1 className="text-5xl font-bold tracking-tight text-foreground sm:text-6xl md:text-7xl">
+        <h1 className="text-5xl font-bold tracking-tight text-foreground sm:text-6xl md:text-7xl animate-scale-in">
           Build better AI{" "}
           <span className="bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">
             in 30 seconds.
           </span>
         </h1>
 
-        <p className="mx-auto max-w-2xl text-lg leading-relaxed text-muted">
+        <p className="mx-auto max-w-2xl text-lg leading-relaxed text-muted animate-fade-in">
           PromptLens automatically tests your AI prompt against 15 benchmark scenarios, runs it
           on both GPT-4o-mini and Gemini, then gives you a plain-English quality score and
           one specific tip to improve it.
